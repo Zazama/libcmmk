@@ -301,9 +301,11 @@ int cmmk_attach(struct cmmk *state, int product, int layout)
 	if (state->dev == NULL)
 		goto out_step1;
 
-	if (libusb_kernel_driver_active(state->dev, CMMK_USB_INTERFACE))
-		if (libusb_detach_kernel_driver(state->dev,  CMMK_USB_INTERFACE) != 0)
-			goto out_step2;
+	#ifndef _WIN32
+		if (libusb_kernel_driver_active(state->dev, CMMK_USB_INTERFACE))
+			if (libusb_detach_kernel_driver(state->dev,  CMMK_USB_INTERFACE) != 0)
+				goto out_step2;
+	#endif
 
 	if (libusb_claim_interface(state->dev, CMMK_USB_INTERFACE) != 0)
 		goto out_step2;
